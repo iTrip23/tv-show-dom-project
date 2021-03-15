@@ -1,11 +1,37 @@
+*{
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
 #root {
   color: red;
+  width: 100vw;
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-around;
   align-items: center;
 }
 
-.episode-card {
+.card-info {
   width: 300px;
-  height: 500px;
+  padding: 10px;
+  margin: 10px;
+}
+
+.card-title {
+  padding: 10px;
+  margin: 10px;
+  font-size: 25px;
+  text-align: center;
+}
+
+.card-img {
+  display: block;
+  margin: auto;
+}
+
+.card-summary {
+  padding: 10px;
+  margin: 10px;
 }
