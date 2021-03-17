@@ -10,18 +10,7 @@ const selectEl = document.querySelector('#select');
 function setup() {
   allEpisodes = getAllEpisodes();
   displayEpisodes(allEpisodes);
-  for (let episode of allEpisodes) {
-    let optionEl = document.createElement('option');
-    let seasonNr = String(episode.season).padStart(2, 0);
-    let episodeNr = String(episode.number).padStart(2, 0);
-    optionEl.innerHTML = `S${seasonNr}:E${episodeNr} - ${episode.name}`;
-    optionEl.value = episode.id;
-    selectEl.appendChild(optionEl);
-    optionEl.addEventListener('click', function () {
-      rootEl.innerHTML = '';
-      displayEpisode(episode);
-    });
-  }
+  selectOptions();
   displayEpisodes(filteredEpisodes);
 }
 
@@ -47,6 +36,28 @@ function displayEpisode(episode) {
   rootEl.appendChild(cardEl);
 }
 
+function selectOptions() {
+  let optionEl = document.createElement('option');
+  optionEl.innerText = 'All Episodes';
+  optionEl.value = 'allEpisodes';
+  optionEl.addEventListener('click', function () {
+    rootEl.innerHTML = '';
+    displayEpisodes(allEpisodes);
+  })
+  selectEl.appendChild(optionEl);
+  for (let episode of allEpisodes) {
+    let optionEl = document.createElement('option');
+    let seasonNr = String(episode.season).padStart(2, 0);
+    let episodeNr = String(episode.number).padStart(2, 0);
+    optionEl.innerHTML = `S${seasonNr}:E${episodeNr} - ${episode.name}`;
+    optionEl.value = episode.id;
+    selectEl.appendChild(optionEl);
+    optionEl.addEventListener('click', function () {
+      rootEl.innerHTML = '';
+      displayEpisode(episode);
+    });
+  }
+}
 
 function displayEpisodes(episodeList) {
   for (let episode of episodeList) {
@@ -63,26 +74,3 @@ searchInput.addEventListener('keyup', (input) => {
   searchResult.innerHTML = `Displaying ${filteredEpisodes.length}/${allEpisodes.length}`;
   displayEpisodes(filteredEpisodes);
 });
-
-function selectEpisode(allEpisodes) {
-  let selectOptions = allEpisodes.map(elem => {
-    let seasonNr = String(episode.season).padStart(2, 0);
-    let episodeNr = String(episode.number).padStart(2, 0);
-    return `<option value='${elem.name}'>S${seasonNr}E${episodeNr}: ${elem.name}</option>`;
-  }).join('');
-  selectOptions = '<option>All Episodes</option>' + selectOptions;
-  selectEl.innerHTML = selectOptions;
-}
-
-let option = document.createElement('option');
-option.innerText = 'All Episodes';
-option.value = 'allEpisodes';
-option.addEventListener('click', function () {
-  rootEl.innerHTML = '';
-  displayEpisodes(allEpisodes);
-})
-selectEl.appendChild(option);
-
-function createOptions() {
-  selectEpisode(allEpisodes);
-}
