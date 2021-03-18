@@ -4,6 +4,11 @@
   margin: 0;
 }
 
+.project-title {
+  text-align: center;
+  margin: 2rem;
+}
+
 #root {
   color: red;
   width: 100vw;
@@ -15,6 +20,7 @@
 
 .card-info {
   width: 300px;
+  height: 580px;
   margin: 10px 0;
   border-radius: 11px;
   text-align: justify;

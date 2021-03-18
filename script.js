@@ -1,70 +1,66 @@
-//You can edit ALL of the code here
 let allEpisodes;
-let filteredEpisodes = [];
+let filteredEpisodes;
 const rootEl = document.querySelector('#root');
 const searchInput = document.querySelector('#search-input');
 const searchResult = document.querySelector('#search-result');
-searchInput.innerText = '';
+searchInput.value = '';
 const selectEl = document.querySelector('#select');
+let selectOptions = document.createElement('option');
+selectOptions.innerText = `All Episodes`;
+selectEl.appendChild(selectOptions);
 
-
-function setup() {
-  allEpisodes = getAllEpisodes();
-  displayEpisodes(allEpisodes);
-  selectOptions();
+function displayAll() {
+  let parentEl = allEpisodes.map(episode => {
+    let seasonNr = String(episode.season).padStart(2, 0);
+    let episodeNr = String(episode.number).padStart(2, 0);
+    return `
+          <div class='card-info'>
+            <h3 class='card-title'>${episode.name} S${seasonNr}:E${episodeNr}</h3>
+            <img src=${episode.image.medium} class='card-img'>
+            <div class='card-summary'>${episode.summary}</div>
+          </div>
+        `
+  }).join('');
+  rootEl.innerHTML = parentEl;
   searchResult.innerHTML = `Displaying ${allEpisodes.length}/${allEpisodes.length}`;
 }
 
-window.onload = setup;
-
-function displayEpisode(episode) {
-  const seasonNr = String(episode.season).padStart(2, 0);
-  const episodeNr = String(episode.number).padStart(2, 0);
-  const cardEl = document.createElement('div');
-  cardEl.className = 'card-info';
-  const epTitleEl = document.createElement('h1');
-  epTitleEl.className = 'card-title';
-  epTitleEl.innerText = `${episode.name} S${seasonNr}E${episodeNr}`;
-  cardEl.appendChild(epTitleEl);
-  const pictureEl = document.createElement('img');
-  pictureEl.src = episode.image.medium;
-  pictureEl.className = 'card-img';
-  cardEl.appendChild(pictureEl);
-  const summaryEl = document.createElement('div');
-  summaryEl.innerHTML = episode.summary;
-  summaryEl.className = 'card-summary';
-  cardEl.appendChild(summaryEl);
-  rootEl.appendChild(cardEl);
+function getApi() {
+  fetch('https://api.tvmaze.com/shows/82/episodes')
+    .then(res => res.json())
+    .then(data => {
+      allEpisodes = data;
+      let parentEl = data.map(episode => {
+        let seasonNr = String(episode.season).padStart(2, 0);
+        let episodeNr = String(episode.number).padStart(2, 0);
+        let selectOption = document.createElement('option');
+        selectOption.innerText = `S${seasonNr}:E${episodeNr} - ${episode.name}`;
+        selectOption.addEventListener('click', function () {
+          rootEl.innerHTML = `
+            <div class='card-info'>
+              <h3 class='card-title'>${episode.name} S${seasonNr}:E${episodeNr}</h3>
+              <img src=${episode.image.medium} class='card-img'>
+              <div class='card-summary'>${episode.summary}</div>
+            </div>
+          `
+          searchResult.innerHTML = `Displaying 1/${allEpisodes.length}`;
+        })
+        selectEl.appendChild(selectOption);
+        return `
+          <div class='card-info'>
+            <h3 class='card-title'>${episode.name} S${seasonNr}:E${episodeNr}</h3>
+            <img src=${episode.image.medium} class='card-img'>
+            <div class='card-summary'>${episode.summary}</div>
+          </div>
+        `
+      }).join('');
+      rootEl.innerHTML = parentEl;
+      searchResult.innerHTML = `Displaying ${allEpisodes.length}/${allEpisodes.length}`;
+    })
+  selectOptions.addEventListener('click', displayAll);
 }
 
-function selectOptions() {
-  let optionEl = document.createElement('option');
-  optionEl.innerText = 'All Episodes';
-  optionEl.addEventListener('click', function () {
-    rootEl.innerHTML = '';
-    displayEpisodes(allEpisodes);
-    searchResult.innerHTML = `Displaying ${allEpisodes.length}/${allEpisodes.length}`;
-  })
-  selectEl.appendChild(optionEl);
-  for (let episode of allEpisodes) {
-    let optionEl = document.createElement('option');
-    let seasonNr = String(episode.season).padStart(2, 0);
-    let episodeNr = String(episode.number).padStart(2, 0);
-    optionEl.innerHTML = `S${seasonNr}:E${episodeNr} - ${episode.name}`;
-    selectEl.appendChild(optionEl);
-    optionEl.addEventListener('click', function () {
-      rootEl.innerHTML = '';
-      displayEpisode(episode);
-      searchResult.innerHTML = `Displaying 1/${allEpisodes.length}`;
-    });
-  }
-}
-
-function displayEpisodes(episodeList) {
-  for (let episode of episodeList) {
-    displayEpisode(episode);
-  }
-}
+getApi();
 
 searchInput.addEventListener('keyup', (input) => {
   const searchEl = input.target.value.toLowerCase();
@@ -73,5 +69,16 @@ searchInput.addEventListener('keyup', (input) => {
     return (episode.name.toLowerCase().includes(searchEl) || episode.summary.toLowerCase().includes(searchEl));
   });
   searchResult.innerHTML = `Displaying ${filteredEpisodes.length}/${allEpisodes.length}`;
-  displayEpisodes(filteredEpisodes);
+  let filterHTML = filteredEpisodes.map(episode => {
+    let seasonNr = String(episode.season).padStart(2, 0);
+    let episodeNr = String(episode.number).padStart(2, 0);
+    return `
+          <div class='card-info'>
+            <h3 class='card-title'>${episode.name} S${seasonNr}:E${episodeNr}</h3>
+            <img src=${episode.image.medium} class='card-img'>
+            <div class='card-summary'>${episode.summary}</div>
+          </div>
+        `
+  }).join('');
+  rootEl.innerHTML = filterHTML;
 });
