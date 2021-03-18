@@ -2,6 +2,11 @@
   box-sizing: border-box;
   padding: 0;
   margin: 0;
+  overflow: hidden;
+}
+
+body {
+  max-width: 100%;
 }
 
 .project-title {
@@ -50,6 +55,10 @@
 }
 
 .card-summary {
-  padding: 10px;
   margin: 10px;
+}
+
+#select {
+  width: 400px;
+  margin: 15px;
 }
