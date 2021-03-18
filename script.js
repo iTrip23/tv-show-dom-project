@@ -7,11 +7,12 @@ const searchResult = document.querySelector('#search-result');
 searchInput.innerText = '';
 const selectEl = document.querySelector('#select');
 
+
 function setup() {
   allEpisodes = getAllEpisodes();
   displayEpisodes(allEpisodes);
   selectOptions();
-  displayEpisodes(filteredEpisodes);
+  searchResult.innerHTML = `Displaying ${allEpisodes.length}/${allEpisodes.length}`;
 }
 
 window.onload = setup;
@@ -39,10 +40,10 @@ function displayEpisode(episode) {
 function selectOptions() {
   let optionEl = document.createElement('option');
   optionEl.innerText = 'All Episodes';
-  optionEl.value = 'allEpisodes';
   optionEl.addEventListener('click', function () {
     rootEl.innerHTML = '';
     displayEpisodes(allEpisodes);
+    searchResult.innerHTML = `Displaying ${allEpisodes.length}/${allEpisodes.length}`;
   })
   selectEl.appendChild(optionEl);
   for (let episode of allEpisodes) {
@@ -50,11 +51,11 @@ function selectOptions() {
     let seasonNr = String(episode.season).padStart(2, 0);
     let episodeNr = String(episode.number).padStart(2, 0);
     optionEl.innerHTML = `S${seasonNr}:E${episodeNr} - ${episode.name}`;
-    optionEl.value = episode.id;
     selectEl.appendChild(optionEl);
     optionEl.addEventListener('click', function () {
       rootEl.innerHTML = '';
       displayEpisode(episode);
+      searchResult.innerHTML = `Displaying 1/${allEpisodes.length}`;
     });
   }
 }
