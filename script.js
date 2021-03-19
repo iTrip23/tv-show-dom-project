@@ -29,33 +29,8 @@ function getApi() {
   fetch('https://api.tvmaze.com/shows/82/episodes')
     .then(res => res.json())
     .then(data => {
-      allEpisodes = data;
-      let parentEl = data.map(episode => {
-        let seasonNr = String(episode.season).padStart(2, 0);
-        let episodeNr = String(episode.number).padStart(2, 0);
-        let selectOption = document.createElement('option');
-        selectOption.innerText = `S${seasonNr}:E${episodeNr} - ${episode.name}`;
-        selectOption.addEventListener('click', function () {
-          rootEl.innerHTML = `
-            <div class='card-info'>
-              <h3 class='card-title'>${episode.name} S${seasonNr}:E${episodeNr}</h3>
-              <img src=${episode.image.medium} class='card-img'>
-              <div class='card-summary'>${episode.summary}</div>
-            </div>
-          `
-          searchResult.innerHTML = `Displaying 1/${allEpisodes.length}`;
-        })
-        selectEl.appendChild(selectOption);
-        return `
-          <div class='card-info'>
-            <h3 class='card-title'>${episode.name} S${seasonNr}:E${episodeNr}</h3>
-            <img src=${episode.image.medium} class='card-img'>
-            <div class='card-summary'>${episode.summary}</div>
-          </div>
-        `
-      }).join('');
-      rootEl.innerHTML = parentEl;
-      searchResult.innerHTML = `Displaying ${allEpisodes.length}/${allEpisodes.length}`;
+      allEpisodes = data
+      buildWebPage();
     })
   selectOptions.addEventListener('click', displayAll);
 }
@@ -82,3 +57,33 @@ searchInput.addEventListener('keyup', (input) => {
   }).join('');
   rootEl.innerHTML = filterHTML;
 });
+
+function buildWebPage() {
+  let parentEl = allEpisodes.map(episode => {
+    let seasonNr = String(episode.season).padStart(2, 0);
+    let episodeNr = String(episode.number).padStart(2, 0);
+    let selectOption = document.createElement('option');
+    selectOption.innerText = `S${seasonNr}:E${episodeNr} - ${episode.name}`;
+    selectOption.addEventListener('click', function () {
+      rootEl.innerHTML = `
+            <div class='card-info'>
+              <h3 class='card-title'>${episode.name} S${seasonNr}:E${episodeNr}</h3>
+              <img src=${episode.image.medium} class='card-img'>
+              <div class='card-summary'>${episode.summary}</div>
+            </div>
+          `
+      searchResult.innerHTML = `Displaying 1/${allEpisodes.length}`;
+    })
+    selectEl.appendChild(selectOption);
+    return `
+          <div class='card-info'>
+            <h3 class='card-title'>${episode.name} S${seasonNr}:E${episodeNr}</h3>
+            <img src=${episode.image.medium} class='card-img'>
+            <div class='card-summary'>${episode.summary}</div>
+          </div>
+        `
+  }).join('');
+  rootEl.innerHTML = parentEl;
+  searchResult.innerHTML = `Displaying ${allEpisodes.length}/${allEpisodes.length}`;
+
+}
