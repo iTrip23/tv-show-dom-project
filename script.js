@@ -1,89 +1,72 @@
 let allEpisodes;
 let filteredEpisodes;
+let allTVShows;
 const rootEl = document.querySelector('#root');
 const searchInput = document.querySelector('#search-input');
 const searchResult = document.querySelector('#search-result');
 searchInput.value = '';
 const selectEl = document.querySelector('#select');
-let selectOptions = document.createElement('option');
-selectOptions.innerText = `All Episodes`;
-selectEl.appendChild(selectOptions);
+let selectAll = document.createElement('option');
+selectAll.addEventListener('click', () => {
+  let parentEl = '';
+  allEpisodes.forEach(episode => parentEl += getEpisodeCard(episode));
+  rootEl.innerHTML = parentEl;
+  searchResult.innerHTML = `Displaying ${allEpisodes.length}/${allEpisodes.length}`;
+});
+selectAll.innerText = `All Episodes`;
+selectEl.appendChild(selectAll);
 
-function displayAll() {
-  let parentEl = allEpisodes.map(episode => {
-    let seasonNr = String(episode.season).padStart(2, 0);
-    let episodeNr = String(episode.number).padStart(2, 0);
-    return `
-          <div class='card-info'>
-            <h3 class='card-title'>${episode.name} S${seasonNr}:E${episodeNr}</h3>
-            <img src=${episode.image.medium} class='card-img'>
-            <div class='card-summary'>${episode.summary}</div>
-          </div>
-        `
-  }).join('');
+const getEpisodeTitle = obj => 'S' + `${obj.season}`.padStart(2, 0) + 'E' + `${obj.number}`.padStart(2, 0) + ` - ${obj.name}`;
+const getEpisodeCard = obj => `<div class="row col-md-3 m-1 card">
+  <div class="card-body">
+    <h5 class="card-title text-center">${getEpisodeTitle(obj)}</h5>
+    <hr>
+    <img src="${obj.image.medium}" class="card-img-top" alt="">
+    <p class="card-text">${obj.summary}</p>
+  </div>
+</div>`;
+
+function displayEpisodes(arr) {
+  let parentEl = '';
+  arr.forEach(episode => parentEl += getEpisodeCard(episode));
   rootEl.innerHTML = parentEl;
   searchResult.innerHTML = `Displaying ${allEpisodes.length}/${allEpisodes.length}`;
 }
 
-function getApi() {
+function getGoT() {
   fetch('https://api.tvmaze.com/shows/82/episodes')
     .then(res => res.json())
     .then(data => {
-      allEpisodes = data
+      allEpisodes = data;
       buildWebPage();
     })
-  selectOptions.addEventListener('click', displayAll);
 }
 
-getApi();
+getGoT();
 
 searchInput.addEventListener('keyup', (input) => {
   const searchEl = input.target.value.toLowerCase();
-  rootEl.innerHTML = '';
-  filteredEpisodes = allEpisodes.filter(episode => {
-    return (episode.name.toLowerCase().includes(searchEl) || episode.summary.toLowerCase().includes(searchEl));
-  });
-  searchResult.innerHTML = `Displaying ${filteredEpisodes.length}/${allEpisodes.length}`;
-  let filterHTML = filteredEpisodes.map(episode => {
-    let seasonNr = String(episode.season).padStart(2, 0);
-    let episodeNr = String(episode.number).padStart(2, 0);
-    return `
-          <div class='card-info'>
-            <h3 class='card-title'>${episode.name} S${seasonNr}:E${episodeNr}</h3>
-            <img src=${episode.image.medium} class='card-img'>
-            <div class='card-summary'>${episode.summary}</div>
-          </div>
-        `
-  }).join('');
-  rootEl.innerHTML = filterHTML;
+  filteredEpisodes = allEpisodes.filter(episode => episode.name.toLowerCase().includes(searchEl) || episode.summary.toLowerCase().includes(searchEl));
+  searchResult.innerHTML = `Displaying ${filteredEpisodes.length}/${allEpisodes.length} episodes`;
+  displayEpisodes(filteredEpisodes);
 });
 
 function buildWebPage() {
-  let parentEl = allEpisodes.map(episode => {
-    let seasonNr = String(episode.season).padStart(2, 0);
-    let episodeNr = String(episode.number).padStart(2, 0);
+  allEpisodes.forEach(episode => {
     let selectOption = document.createElement('option');
-    selectOption.innerText = `S${seasonNr}:E${episodeNr} - ${episode.name}`;
-    selectOption.addEventListener('click', function () {
-      rootEl.innerHTML = `
-            <div class='card-info'>
-              <h3 class='card-title'>${episode.name} S${seasonNr}:E${episodeNr}</h3>
-              <img src=${episode.image.medium} class='card-img'>
-              <div class='card-summary'>${episode.summary}</div>
-            </div>
-          `
-      searchResult.innerHTML = `Displaying 1/${allEpisodes.length}`;
-    })
+    selectOption.innerText = `${getEpisodeTitle(episode)}`;
+    selectOption.addEventListener('click', () => rootEl.innerHTML = getEpisodeCard(episode), searchResult.innerHTML = `Displaying 1/${allEpisodes.length} episodes`);
     selectEl.appendChild(selectOption);
-    return `
-          <div class='card-info'>
-            <h3 class='card-title'>${episode.name} S${seasonNr}:E${episodeNr}</h3>
-            <img src=${episode.image.medium} class='card-img'>
-            <div class='card-summary'>${episode.summary}</div>
-          </div>
-        `
-  }).join('');
-  rootEl.innerHTML = parentEl;
-  searchResult.innerHTML = `Displaying ${allEpisodes.length}/${allEpisodes.length}`;
-
+  })
+  displayEpisodes(allEpisodes);
 }
+
+// function getTVShows() {
+//   fetch('https://api.tvmaze.com/shows')
+//     .then(res => res.json())
+//     .then(data => {
+//       allTVShows = data;
+//       allTVShows.
+//     })
+// }
+// getTVShows();
