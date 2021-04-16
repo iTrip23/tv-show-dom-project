@@ -8,19 +8,7 @@ const searchInput = document.querySelector('#search-input');
 const searchResult = document.querySelector('#search-result');
 searchInput.value = '';
 const selectEpisodesEl = document.querySelector('#select');
-const TVShowsEl = document.querySelector('#TVShows');
-const optionALL = document.createElement('option');
-
-optionALL.innerText = 'All TV Series';
-optionALL.value = allTVShows;
-optionALL.addEventListener('change', () => {
-  rootEl.innerHTML = '';
-  optionALL.value.forEach(show => {
-    rootEl.innerHTML += getShowCard(show);
-  });
-});
-
-TVShowsEl.appendChild(optionALL);
+const selectShowEl = document.querySelector('#TVShows');
 
 const getEpisodeTitle = obj => 'S' + `${obj.season}`.padStart(2, 0) + 'E' + `${obj.number}`.padStart(2, 0) + ` - ${obj.name}`;
 
@@ -58,46 +46,18 @@ const getShowCard = obj => `
 </div>
 `;
 
-
-
-
 function getTVShows() {
   fetch('https://api.tvmaze.com/shows')
     .then(res => res.json())
     .then(data => {
       allTVShows = data;
-      displayAllShows();
+      displayAllShows(allTVShows);
       getAllGenres();
     })
+    .catch(error => console.log(error))
 }
 
 getTVShows();
-
-function displayAllShows(arr) {
-  rootEl.innerHTML = '';
-  allTVShows.forEach(show => {
-    rootEl.innerHTML += getShowCard(show);
-    let optionEl = document.createElement('option');
-    optionEl.innerHTML = show.name;
-    optionEl.value = show.id;
-    TVShowsEl.appendChild(optionEl);
-  })
-}
-
-TVShowsEl.addEventListener('change', () =>
-  fetch(`http://api.tvmaze.com/shows/${TVShowsEl.value}/episodes`)
-    .then(res => res.json())
-    .then(data => {
-      allEpisodes = data;
-      displaySelectedShow(allEpisodes);
-    })
-)
-
-function getAllGenres() {
-  let genres = [];
-  allTVShows.forEach(show => show.genres.forEach(gen => genres.push(gen)));
-  allGenres = [...new Set(genres)];
-}
 
 function fetchShowAndDisplay(id) {
   fetch(`http://api.tvmaze.com/shows/${id}/episodes`)
@@ -110,16 +70,6 @@ function fetchShowAndDisplay(id) {
 }
 
 
-function getAndDisplayShowInfo() {
-  return `<div></div>`
-}
-
-
-function displayShows(arr) {
-  rootEl.innerHTML = '';
-  arr.forEach(show => rootEl.innerHTML += getShowCard(show))
-}
-
 function displayEpisodes(arr) {
   rootEl.innerHTML = '';
   arr.forEach(episode => rootEl.innerHTML += getEpisodeCard(episode));
@@ -130,8 +80,7 @@ function createEpisodeSelect(arr) {
   selectEpisodesEl.innerHTML = '';
   let selectAllEpisodes = document.createElement('option');
   selectAllEpisodes.innerText = 'All Episodes';
-  selectAllEpisodes.value = arr;
-  selectAllEpisodes.addEventListener('change', displayEpisodes(arr));
+  selectAllEpisodes.value = 'selectAll';
   selectEpisodesEl.appendChild(selectAllEpisodes);
   arr.forEach(episode => {
     let selectOption = document.createElement('option');
@@ -146,7 +95,8 @@ function displaySelectedShow(arr) {
   displayEpisodes(arr);
 }
 
-selectEpisodesEl.addEventListener('change', () => {
+selectEpisodesEl.addEventListener('change', (e) => {
+  if (e.target.value == 'selectAll') displayEpisodes(allEpisodes);
   for (let ep of allEpisodes) {
     if (ep.id == selectEpisodesEl.value) {
       rootEl.innerHTML = getEpisodeCard(ep);
@@ -154,6 +104,89 @@ selectEpisodesEl.addEventListener('change', () => {
     }
   }
 })
+
+selectShowEl.addEventListener('change', (e) => {
+  if (e.target.value == 'allShows') {
+    displayShows(allTVShows);
+  }
+  for (let show of allTVShows) {
+    if (show.id == selectShowEl.value) {
+      fetchShowAndDisplay(show.id);
+    }
+  }
+})
+
+function createShowSelect(arr) {
+  selectShowEl.innerHTML = '';
+  let selectAllShows = document.createElement('option');
+  selectAllShows.innerText = 'All Shows';
+  selectAllShows.value = 'allShows';
+  selectShowEl.appendChild(selectAllShows);
+  arr.forEach(show => {
+    let selectOption = document.createElement('option');
+    selectOption.innerText = show.name;
+    selectOption.value = show.id;
+    selectShowEl.appendChild(selectOption);
+  })
+}
+
+function displayShows(arr) {
+  console.time('Display Shows');
+  let allShowsHTML = '';
+  arr.forEach(show => allShowsHTML += getShowCard(show))
+  rootEl.innerHTML = allShowsHTML;
+  console.timeEnd('Display Shows');
+}
+
+function displayAllShows(arr) {
+  createShowSelect(arr);
+  displayShows(arr);
+}
+
+
+function getAllGenres() {
+  let genres = [];
+  allTVShows.forEach(show => show.genres.forEach(gen => genres.push(gen)));
+  allGenres = [...new Set(genres)];
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// fetch(`http://api.tvmaze.com/shows/${e.target.value}/episodes`)
+//   .then(res => res.json())
+//   .then(data => {
+//     allEpisodes = data;
+//     displaySelectedShow(allEpisodes);
+//   })
+//   .catch(error => console.log(error))
+
+
+
+
+
+
 
 // searchInput.addEventListener('keyup', (input) => {
   //   const searchEl = input.target.value.toLowerCase();
