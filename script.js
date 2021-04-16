@@ -133,9 +133,18 @@ function createShowSelect(arr) {
 function displayShows(arr) {
   console.time('Display Shows');
   let allShowsHTML = '';
-  arr.forEach(show => allShowsHTML += getShowCard(show))
+  let firstTen = arr.slice(0, 10);
+  let restOf = arr.slice(10);
+  firstTen.forEach(show => allShowsHTML += getShowCard(show));
   rootEl.innerHTML = allShowsHTML;
+  setTimeout(() => displayMoreShows(restOf), 100);
   console.timeEnd('Display Shows');
+}
+
+function displayMoreShows(arr) {
+  let restOfHTML = '';
+  arr.forEach(show => restOfHTML += getShowCard(show));
+  rootEl.innerHTML += restOfHTML;
 }
 
 function displayAllShows(arr) {
