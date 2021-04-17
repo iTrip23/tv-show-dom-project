@@ -6,7 +6,6 @@ let allGenres;
 const rootEl = document.querySelector('#root');
 const searchInput = document.querySelector('#search-input');
 const searchResult = document.querySelector('#search-result');
-searchInput.value = '';
 const selectEpisodesEl = document.querySelector('#select');
 const selectShowEl = document.querySelector('#TVShows');
 
@@ -46,18 +45,20 @@ const getShowCard = obj => `
 </div>
 `;
 
-function getTVShows() {
+function fetchAllShowsAndDisplay() {
   fetch('https://api.tvmaze.com/shows')
     .then(res => res.json())
     .then(data => {
       allTVShows = data;
+      console.log(allTVShows[12]);
       displayAllShows(allTVShows);
       getAllGenres();
+      searchBar(allTVShows);
     })
     .catch(error => console.log(error))
 }
 
-getTVShows();
+fetchAllShowsAndDisplay();
 
 function fetchShowAndDisplay(id) {
   fetch(`http://api.tvmaze.com/shows/${id}/episodes`)
@@ -65,14 +66,16 @@ function fetchShowAndDisplay(id) {
     .then(data => {
       allEpisodes = data;
       displaySelectedShow(allEpisodes);
+      searchBar(allEpisodes);
     })
     .catch(error => console.log(error));
 }
 
 
 function displayEpisodes(arr) {
-  rootEl.innerHTML = '';
-  arr.forEach(episode => rootEl.innerHTML += getEpisodeCard(episode));
+  let allEpisodesHTML = '';
+  arr.forEach(episode => allEpisodesHTML += getEpisodeCard(episode));
+  rootEl.innerHTML = allEpisodesHTML;
   searchResult.innerHTML = `Displaying ${arr.length}/${arr.length}`;
 }
 
@@ -93,6 +96,8 @@ function createEpisodeSelect(arr) {
 function displaySelectedShow(arr) {
   createEpisodeSelect(arr);
   displayEpisodes(arr);
+  searchBar(arr);
+  searchInput.value = '';
 }
 
 selectEpisodesEl.addEventListener('change', (e) => {
@@ -100,19 +105,15 @@ selectEpisodesEl.addEventListener('change', (e) => {
   for (let ep of allEpisodes) {
     if (ep.id == selectEpisodesEl.value) {
       rootEl.innerHTML = getEpisodeCard(ep);
-      searchResult.innerHTML = `Displaying 1/${allEpisodes.length} episodes`;
+      searchResult.innerHTML = `Displaying 1/${allEpisodes.length}`;
     }
   }
 })
 
 selectShowEl.addEventListener('change', (e) => {
-  if (e.target.value == 'allShows') {
-    displayShows(allTVShows);
-  }
+  if (e.target.value == 'allShows') displayShows(allTVShows);
   for (let show of allTVShows) {
-    if (show.id == selectShowEl.value) {
-      fetchShowAndDisplay(show.id);
-    }
+    if (show.id == selectShowEl.value) fetchShowAndDisplay(show.id);
   }
 })
 
@@ -131,14 +132,14 @@ function createShowSelect(arr) {
 }
 
 function displayShows(arr) {
-  console.time('Display Shows');
   let allShowsHTML = '';
   arr.forEach(show => allShowsHTML += getShowCard(show))
   rootEl.innerHTML = allShowsHTML;
-  console.timeEnd('Display Shows');
+  searchResult.innerHTML = `Displaying ${arr.length}/${arr.length}`;
 }
 
 function displayAllShows(arr) {
+  searchInput.value = '';
   createShowSelect(arr);
   displayShows(arr);
 }
@@ -150,71 +151,20 @@ function getAllGenres() {
   allGenres = [...new Set(genres)];
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// fetch(`http://api.tvmaze.com/shows/${e.target.value}/episodes`)
-//   .then(res => res.json())
-//   .then(data => {
-//     allEpisodes = data;
-//     displaySelectedShow(allEpisodes);
-//   })
-//   .catch(error => console.log(error))
-
-
-
-
-
-
-
-// searchInput.addEventListener('keyup', (input) => {
-  //   const searchEl = input.target.value.toLowerCase();
-  //   filteredEpisodes = allEpisodes.filter(episode => episode.name.toLowerCase().includes(searchEl) || episode.summary.toLowerCase().includes(searchEl));
-  //   displayEpisodes(filteredEpisodes);
-  //   searchResult.innerHTML = `Displaying ${filteredEpisodes.length}/${allEpisodes.length} episodes`;
-  // });
-
-
-
-
-  // function searchBar(content) {
-    //   if (content[0].url.includes('shows')) {
-      //     searchInput.addEventListener('keyup', (input) => {
-        //       const searchEl = input.target.value.toLowerCase();
-        //       let filteredResults = content.filter(obj => obj.name.toLowerCase().includes(searchEl) || obj.summary.toLowerCase().includes(searchEl) || obj.genres.toLowerCase().includes(searchEl));
-        //       rootEl.innerHTML = '';
-        //       filteredResults.forEach(show => {
-          //         rootEl.innerHTML += getShowCard(show);
-          //       });
-          //       searchResult.innerHTML = `Displaying ${filteredResults.length}/${content.length}`;
-          //     });
-          //   } else {
-            //     searchInput.addEventListener('keyup', (input) => {
-              //       const searchEl = input.target.value.toLowerCase();
-              //       let filteredResults = content.filter(obj => obj.name.toLowerCase().includes(searchEl) || obj.summary.toLowerCase().includes(searchEl));
-              //       displayEpisodes(filteredResults);
-              //       searchResult.innerHTML = `Displaying ${filteredResults.length}/${content.length}`;
-              //     });
-              //   }
-              // }
+function searchBar(arr) {
+  if (arr[0].genres != null) {
+    searchInput.addEventListener('keyup', (input) => {
+      const searchEl = input.target.value.toLowerCase();
+      let filteredResults = arr.filter(obj => obj.name.toLowerCase().includes(searchEl) || obj.summary.toLowerCase().includes(searchEl) || obj.genres.forEach(gen => gen.toLowerCase().includes(searchEl)));
+      displayShows(filteredResults);
+      searchResult.innerHTML = `Displaying ${filteredResults.length}/${arr.length}`;
+    });
+  } else {
+    searchInput.addEventListener('keyup', (input) => {
+      const searchEl = input.target.value.toLowerCase();
+      let filteredResults = arr.filter(obj => obj.name.toLowerCase().includes(searchEl) || obj.summary.toLowerCase().includes(searchEl));
+      displayEpisodes(filteredResults);
+      searchResult.innerHTML = `Displaying ${filteredResults.length}/${arr.length}`;
+    });
+  }
+}
