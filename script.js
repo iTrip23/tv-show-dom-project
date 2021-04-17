@@ -3,11 +3,13 @@ let allTVShows;
 let selectedShow;
 let allGenres;
 
-const rootEl = document.querySelector('#root');
+// const rootEl = document.querySelector('#root');
 const searchInput = document.querySelector('#search-input');
 const searchResult = document.querySelector('#search-result');
 const selectEpisodesEl = document.querySelector('#select');
 const selectShowEl = document.querySelector('#TVShows');
+const episodesEl = document.querySelector('#episodes');
+const showsEl = document.querySelector('#tvSeries');
 
 const getEpisodeTitle = obj => 'S' + `${obj.season}`.padStart(2, 0) + 'E' + `${obj.number}`.padStart(2, 0) + ` - ${obj.name}`;
 
@@ -72,9 +74,11 @@ function fetchShowAndDisplay(id) {
 
 
 function displayEpisodes(arr) {
+  showsEl.setAttribute('style', 'display:none !important');
+  episodesEl.setAttribute('style', 'display:inline');
   let allEpisodesHTML = '';
   arr.forEach(episode => allEpisodesHTML += getEpisodeCard(episode));
-  rootEl.innerHTML = allEpisodesHTML;
+  episodesEl.innerHTML = allEpisodesHTML;
   searchResult.innerHTML = `Displaying ${arr.length}/${arr.length}`;
 }
 
@@ -110,7 +114,10 @@ selectEpisodesEl.addEventListener('change', (e) => {
 })
 
 selectShowEl.addEventListener('change', (e) => {
-  if (e.target.value == 'allShows') displayShows(allTVShows);
+  if (e.target.value == 'allShows') {
+    displayShows(allTVShows);
+    searchBar(allTVShows);
+  };
   for (let show of allTVShows) {
     if (show.id == selectShowEl.value) fetchShowAndDisplay(show.id);
   }
@@ -131,9 +138,11 @@ function createShowSelect(arr) {
 }
 
 function displayShows(arr) {
+  showsEl.setAttribute('style', 'display:inline');
+  episodesEl.setAttribute('style', 'display:none !important');
   let allShowsHTML = '';
   arr.forEach(show => allShowsHTML += getShowCard(show))
-  rootEl.innerHTML = allShowsHTML;
+  showsEl.innerHTML = allShowsHTML;
   searchResult.innerHTML = `Displaying ${arr.length}/${arr.length}`;
 }
 

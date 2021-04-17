@@ -20,15 +20,14 @@
         <input type="search" id="search-input" class="col-md-4" placeholder="Search...">
         <p class="search-info text-white col-md-4" id="search-result"></p>
       </div>
+      <div class="row text-center">
+        <button type="button" onclick="displayShows(allTVShows)" class="btn btn-primary col-md-3 offset-4">All Shows</button>
+      </div>
     </header>
-    <main class="container-fluid">
-      <div id="root" class="row d-flex justify-content-around">
-        <div class="episode-wrapper">
-          <div id="episodes" class="row d-flex justify-content-around"></div>
-        </div>
-        <div class="show-wrapper">
-          <div id="tvSeries" class="row d-flex justify-content-around"></div>
-        </div>
+    <main>
+      <div id="root" class="container-fluid">
+        <div id="episodes" class="row d-flex justify-content-around"></div>
+        <div id="tvSeries" class="row d-flex justify-content-around"></div>
       </div>
     </main>
     <footer>
