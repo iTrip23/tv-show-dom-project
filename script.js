@@ -54,7 +54,6 @@ function fetchAllShowsAndDisplay() {
       allTVShows = data;
       displayAllShows(allTVShows);
       getAllGenres();
-      searchBar(allTVShows);
     })
     .catch(error => console.log(error))
 }
@@ -62,12 +61,11 @@ function fetchAllShowsAndDisplay() {
 fetchAllShowsAndDisplay();
 
 function fetchShowAndDisplay(id) {
-  fetch(`http://api.tvmaze.com/shows/${id}/episodes`)
+  fetch(`https://api.tvmaze.com/shows/${id}/episodes`)
     .then(res => res.json())
     .then(data => {
       allEpisodes = data;
       displaySelectedShow(allEpisodes);
-      searchBar(allEpisodes);
     })
     .catch(error => console.log(error));
 }
@@ -80,6 +78,7 @@ function displayEpisodes(arr) {
   arr.forEach(episode => allEpisodesHTML += getEpisodeCard(episode));
   episodesEl.innerHTML = allEpisodesHTML;
   searchResult.innerHTML = `Displaying ${arr.length}/${arr.length}`;
+  searchBar(arr);
 }
 
 function createEpisodeSelect(arr) {
@@ -119,7 +118,7 @@ selectShowEl.addEventListener('change', (e) => {
     searchBar(allTVShows);
   };
   for (let show of allTVShows) {
-    if (show.id == selectShowEl.value) fetchShowAndDisplay(show.id);
+    if (show.id == selectShowEl.value) { fetchShowAndDisplay(show.id); }
   }
 })
 
@@ -150,6 +149,7 @@ function displayAllShows(arr) {
   searchInput.value = '';
   createShowSelect(arr);
   displayShows(arr);
+  searchBar(arr);
 }
 
 
