@@ -50,7 +50,6 @@ function fetchAllShowsAndDisplay() {
     .then(res => res.json())
     .then(data => {
       allTVShows = data;
-      console.log(allTVShows[12]);
       displayAllShows(allTVShows);
       getAllGenres();
       searchBar(allTVShows);
