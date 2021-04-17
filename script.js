@@ -104,10 +104,10 @@ function displaySelectedShow(arr) {
 }
 
 selectEpisodesEl.addEventListener('change', (e) => {
-  if (e.target.value == 'selectAll') displayEpisodes(allEpisodes);
+  if (e.target.value == 'selectAll') { displayEpisodes(allEpisodes); }
   for (let ep of allEpisodes) {
     if (ep.id == selectEpisodesEl.value) {
-      rootEl.innerHTML = getEpisodeCard(ep);
+      episodesEl.innerHTML = getEpisodeCard(ep);
       searchResult.innerHTML = `Displaying 1/${allEpisodes.length}`;
     }
   }
