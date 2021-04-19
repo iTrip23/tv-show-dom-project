@@ -22,14 +22,14 @@ const getEpisodeCard = obj => `<div class="col-md-3 m-1 card">
   </div>
 </div>`;
 
-const getShowCard = obj => `<div class="card col-12 col-md-10 m-3 show-card g-0" onclick="fetchShowAndDisplay(${obj.id})">
+const getShowCard = obj => `<div class="card col-12 col-md-10 m-3 show-card g-0">
     <div class="row g-0">
       <div class="col-md-3">
         ${getAndShowImage(obj)}
       </div>
       <div class="col-md-6">
         <div class="card-body">
-          <h4 class="card-title">${obj.name}</h4>
+          <h4 class="card-title" onclick="fetchShowAndDisplay(${obj.id})" style="cursor: pointer">${obj.name}</h4>
           <p class="summary-p">${obj.summary}</p>
         </div>
       </div>
