@@ -3,8 +3,8 @@ let allTVShows;
 let selectedShow;
 let allGenres;
 
-// const rootEl = document.querySelector('#root');
-const searchInput = document.querySelector('#search-input');
+const searchShowsEl = document.querySelector('#searchShows');
+const searchEpisodesEl = document.querySelector('#searchEpisodes');
 const searchResult = document.querySelector('#search-result');
 const selectEpisodesEl = document.querySelector('#select');
 const selectShowEl = document.querySelector('#TVShows');
@@ -22,8 +22,7 @@ const getEpisodeCard = obj => `<div class="col-md-3 m-1 card">
   </div>
 </div>`;
 
-const getShowCard = obj => `
-  <div class="card col-12 col-md-10 m-3 show-card g-0" onclick="fetchShowAndDisplay(${obj.id})">
+const getShowCard = obj => `<div class="card col-12 col-md-10 m-3 show-card g-0" onclick="fetchShowAndDisplay(${obj.id})">
     <div class="row g-0">
       <div class="col-md-3">
         <img src="${obj.image.original}" alt="${obj.name} image" class="img-fluid show-image"/>
@@ -44,8 +43,7 @@ const getShowCard = obj => `
       </div>
     </div>
   </div>
-</div>
-`;
+</div>`;
 
 function fetchAllShowsAndDisplay() {
   fetch('https://api.tvmaze.com/shows')
@@ -78,7 +76,8 @@ function displayEpisodes(arr) {
   arr.forEach(episode => allEpisodesHTML += getEpisodeCard(episode));
   episodesEl.innerHTML = allEpisodesHTML;
   searchResult.innerHTML = `Displaying ${arr.length}/${arr.length}`;
-  searchBar(arr);
+  searchShowsEl.setAttribute('style', 'display: none !important');
+  searchEpisodesEl.setAttribute('style', 'display: inline');
 }
 
 function createEpisodeSelect(arr) {
@@ -98,8 +97,9 @@ function createEpisodeSelect(arr) {
 function displaySelectedShow(arr) {
   createEpisodeSelect(arr);
   displayEpisodes(arr);
-  searchBar(arr);
-  searchInput.value = '';
+  searchEpisodesEl.value = '';
+  searchShowsEl.setAttribute('style', 'display: none !important');
+  searchEpisodesEl.setAttribute('style', 'display: inline');
 }
 
 selectEpisodesEl.addEventListener('change', (e) => {
@@ -143,13 +143,16 @@ function displayShows(arr) {
   arr.forEach(show => allShowsHTML += getShowCard(show))
   showsEl.innerHTML = allShowsHTML;
   searchResult.innerHTML = `Displaying ${arr.length}/${arr.length}`;
+  searchShowsEl.setAttribute('style', 'display: inline');
+  searchEpisodesEl.setAttribute('style', 'display: none !important');
 }
 
 function displayAllShows(arr) {
-  searchInput.value = '';
   createShowSelect(arr);
   displayShows(arr);
-  searchBar(arr);
+  searchShowsEl.value = '';
+  searchShowsEl.setAttribute('style', 'display: inline');
+  searchEpisodesEl.setAttribute('style', 'display: none !important');
 }
 
 
@@ -159,20 +162,16 @@ function getAllGenres() {
   allGenres = [...new Set(genres)];
 }
 
-function searchBar(arr) {
-  if (arr[0].genres != null) {
-    searchInput.addEventListener('keyup', (input) => {
-      const searchEl = input.target.value.toLowerCase();
-      let filteredResults = arr.filter(obj => obj.name.toLowerCase().includes(searchEl) || obj.summary.toLowerCase().includes(searchEl) || obj.genres.forEach(gen => gen.toLowerCase().includes(searchEl)));
-      displayShows(filteredResults);
-      searchResult.innerHTML = `Displaying ${filteredResults.length}/${arr.length}`;
-    });
-  } else {
-    searchInput.addEventListener('keyup', (input) => {
-      const searchEl = input.target.value.toLowerCase();
-      let filteredResults = arr.filter(obj => obj.name.toLowerCase().includes(searchEl) || obj.summary.toLowerCase().includes(searchEl));
-      displayEpisodes(filteredResults);
-      searchResult.innerHTML = `Displaying ${filteredResults.length}/${arr.length}`;
-    });
-  }
-}
+searchShowsEl.addEventListener('keyup', (input) => {
+  const searchEl = input.target.value.toLowerCase();
+  let filteredResults = allTVShows.filter(obj => obj.name.toLowerCase().includes(searchEl) || obj.summary.toLowerCase().includes(searchEl) || obj.genres.forEach(gen => gen.toLowerCase().includes(searchEl)));
+  displayShows(filteredResults);
+  searchResult.innerHTML = `Displaying ${filteredResults.length}/${allTVShows.length}`;
+})
+
+searchEpisodesEl.addEventListener('keyup', (input) => {
+  const searchEl = input.target.value.toLowerCase();
+  let filteredResults = allEpisodes.filter(obj => obj.name.toLowerCase().includes(searchEl) || obj.summary.toLowerCase().includes(searchEl));
+  displayEpisodes(filteredResults);
+  searchResult.innerHTML = `Displaying ${filteredResults.length}/${allEpisodes.length}`;
+});

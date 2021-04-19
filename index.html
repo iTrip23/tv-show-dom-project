@@ -14,14 +14,14 @@
     <header class="container"> 
       <div class="row">
         <h1 class="project-title text-white col-md-11 text-center m-4">Welcome to my TV-Show Project</h1>
-        <select name="TVShows" class="col-md-5 m-1" id="TVShows">
-        </select>
-        <select name="episodes" id="select" class="col-md-5 m-1"></select>
-        <input type="search" id="search-input" class="col-md-4" placeholder="Search...">
-        <p class="search-info text-white col-md-4" id="search-result"></p>
+        <select name="TVShows" class="col-md-5 m-2 mx-auto" id="TVShows"></select>
+        <select name="episodes" id="select" class="col-md-5 m-2 mx-auto"></select>
+        <input type="search" id="searchShows" class="col-8 mx-auto m-2" placeholder="Search...">
+        <input type="search" id="searchEpisodes" class="col-8 mx-auto m-2" placeholder="Search..." style="display: none;">
+        <p class="search-info text-white text-center mx-auto m-2" id="search-result"></p>
       </div>
       <div class="row text-center">
-        <button type="button" onclick="displayShows(allTVShows)" class="btn btn-primary col-md-3 offset-4">All Shows</button>
+        <button type="button" onclick="displayShows(allTVShows)" class="btn btn-primary col-md-3 mx-auto m-2">All Shows</button>
       </div>
     </header>
     <main>

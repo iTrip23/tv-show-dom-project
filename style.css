@@ -3,21 +3,3 @@
   padding: 0;
   margin: 0;
 }
-
-#root {
-  margin: 0 auto;
-  width: 100%;
-}
-
-.show-image {
-  max-height: 25rem;
-  width: 17rem;
-  height: 100;
-  margin: auto;
-  padding: 0;
-}
-
-.summary-p {
-  max-height: 20rem;
-  overflow: hidden;
-}
