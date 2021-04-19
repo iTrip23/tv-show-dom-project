@@ -17,7 +17,7 @@ const getEpisodeCard = obj => `<div class="col-md-3 m-1 card">
   <div class="card-body card-css">
     <h5 class="card-title text-center">${getEpisodeTitle(obj)}</h5>
     <hr>
-    <img src="${obj.image.original}" class="card-img-top" alt="${getEpisodeTitle(obj)} image">
+      ${getAndShowImage(obj)}
     <p class="card-text">${obj.summary}</p>
   </div>
 </div>`;
@@ -25,7 +25,7 @@ const getEpisodeCard = obj => `<div class="col-md-3 m-1 card">
 const getShowCard = obj => `<div class="card col-12 col-md-10 m-3 show-card g-0" onclick="fetchShowAndDisplay(${obj.id})">
     <div class="row g-0">
       <div class="col-md-3">
-        <img src="${obj.image.original}" alt="${obj.name} image" class="img-fluid show-image"/>
+        ${getAndShowImage(obj)}
       </div>
       <div class="col-md-6">
         <div class="card-body">
@@ -51,6 +51,7 @@ function fetchAllShowsAndDisplay() {
     .then(data => {
       allTVShows = data;
       displayAllShows(allTVShows);
+      searchShowsEl.value = '';
       getAllGenres();
     })
     .catch(error => console.log(error))
@@ -64,9 +65,12 @@ function fetchShowAndDisplay(id) {
     .then(data => {
       allEpisodes = data;
       displaySelectedShow(allEpisodes);
+      searchShowsEl.value = '';
     })
     .catch(error => console.log(error));
 }
+
+const getAndShowImage = obj => obj.image != null ? `<img src="${obj.image.original}" alt="${obj.name} image" class="img-fluid show-image" />` : `<img src="https://cdn.pixabay.com/photo/2018/01/05/00/20/test-image-3061864_960_720.png" alt="image npot available" class="img-fluid show-image" />`
 
 
 function displayEpisodes(arr) {
@@ -115,7 +119,7 @@ selectEpisodesEl.addEventListener('change', (e) => {
 selectShowEl.addEventListener('change', (e) => {
   if (e.target.value == 'allShows') {
     displayShows(allTVShows);
-    searchBar(allTVShows);
+    searchEpisodesEl.value = '';
   };
   for (let show of allTVShows) {
     if (show.id == selectShowEl.value) { fetchShowAndDisplay(show.id); }
