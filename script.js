@@ -49,7 +49,13 @@ function fetchAllShowsAndDisplay() {
   fetch('https://api.tvmaze.com/shows')
     .then(res => res.json())
     .then(data => {
-      allTVShows = data;
+      allTVShows = data.sort((a, b) => {
+        let sa = a.name.toLowerCase();
+        let sb = b.name.toLowerCase();
+        if (sa < sb) { return -1 }
+        if (sa > sb) { return 1 }
+        return 0
+      });
       displayAllShows(allTVShows);
       searchShowsEl.value = '';
       getAllGenres();
