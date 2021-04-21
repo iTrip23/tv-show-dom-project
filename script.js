@@ -27,13 +27,13 @@ const getShowCard = tvSeries => `<div class="card col-11 col-md-10 m-3 show-card
       <figure class="col-12 col-md-3">
         ${getImageAndDisplay(tvSeries)}
       </figure>
-      <section class="col-9 col-md-6">
+      <section class="col-12 col-md-6">
         <div class="card-body">
-          <h4 class="card-title" onclick="fetchShowAndDisplay(${tvSeries.id})" style="cursor: pointer">${tvSeries.name}</h4>
+          <h4 class="card-title text-center" onclick="fetchShowAndDisplay(${tvSeries.id})" style="cursor: pointer">${tvSeries.name}</h4>
           <p class="summary-p">${tvSeries.summary}</p>
         </div>
       </section>
-      <section class="col-3 col-md-3">
+      <section class="col-12 col-md-3">
         <div class="card-body">
           <p class="card-text"><strong>Rating:</strong> ${tvSeries.rating.average}</p>
           <p class="card-text"><strong>Genre:</strong> ${tvSeries.genres}</p>
