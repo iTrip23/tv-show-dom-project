@@ -11,36 +11,36 @@ const selectShowEl = document.querySelector('#TVShows');
 const episodesEl = document.querySelector('#episodes');
 const showsEl = document.querySelector('#tvSeries');
 
-const getEpisodeTitle = obj => 'S' + `${obj.season}`.padStart(2, 0) + 'E' + `${obj.number}`.padStart(2, 0) + ` - ${obj.name}`;
+const getEpisodeTitle = episode => 'S' + `${episode.season}`.padStart(2, 0) + 'E' + `${episode.number}`.padStart(2, 0) + ` - ${episode.name}`;
 
-const getEpisodeCard = obj => `<div class="col-md-3 m-1 card">
-  <div class="card-body card-css">
-    <h5 class="card-title text-center">${getEpisodeTitle(obj)}</h5>
+const getEpisodeCard = episode => `<div class="col-md-3 m-1 card">
+  <figure class="card-body card-css">
+    <h5 class="card-title text-center">${getEpisodeTitle(episode)}</h5>
     <hr>
-      ${getAndShowImage(obj)}
-    <p class="card-text">${obj.summary}</p>
-  </div>
+      ${getImageAndDisplay(episode)}
+    <p class="card-text">${episode.summary}</p>
+  </figure>
 </div>`;
 
-const getShowCard = obj => `<div class="card col-12 col-md-10 m-3 show-card g-0">
+const getShowCard = tvSeries => `<div class="card col-12 col-md-10 m-3 show-card g-0">
     <div class="row g-0">
-      <div class="col-md-3">
-        ${getAndShowImage(obj)}
-      </div>
-      <div class="col-md-6">
+      <figure class="col-md-3">
+        ${getImageAndDisplay(tvSeries)}
+      </figure>
+      <section class="col-md-6">
         <div class="card-body">
-          <h4 class="card-title" onclick="fetchShowAndDisplay(${obj.id})" style="cursor: pointer">${obj.name}</h4>
-          <p class="summary-p">${obj.summary}</p>
+          <h4 class="card-title" onclick="fetchShowAndDisplay(${tvSeries.id})" style="cursor: pointer">${tvSeries.name}</h4>
+          <p class="summary-p">${tvSeries.summary}</p>
         </div>
-      </div>
-      <div class="col-md-3">
+      </section>
+      <section class="col-md-3">
         <div class="card-body">
-          <p class="card-text"><strong>Rating:</strong> ${obj.rating.average}</p>
-          <p class="card-text"><strong>Genre:</strong> ${obj.genres}</p>
-          <p class="card-text"><strong>Status:</strong> ${obj.status}</p>
-          <p class="card-text"><strong>Runtime:</strong> ${obj.runtime}</p>
+          <p class="card-text"><strong>Rating:</strong> ${tvSeries.rating.average}</p>
+          <p class="card-text"><strong>Genre:</strong> ${tvSeries.genres}</p>
+          <p class="card-text"><strong>Status:</strong> ${tvSeries.status}</p>
+          <p class="card-text"><strong>Runtime:</strong> ${tvSeries.runtime}</p>
         </div>
-      </div>
+      </section>
     </div>
   </div>
 </div>`;
@@ -76,7 +76,8 @@ function fetchShowAndDisplay(id) {
     .catch(error => console.log(error));
 }
 
-const getAndShowImage = obj => obj.image != null ? `<img src="${obj.image.original}" alt="${obj.name} image" class="img-fluid show-image" />` : `<img src="https://cdn.pixabay.com/photo/2018/01/05/00/20/test-image-3061864_960_720.png" alt="image npot available" class="img-fluid show-image" />`
+const getImageAndDisplay = obj => obj.image !== null ?? undefined ? `<img src="${obj.image.original}" alt="${obj.name} image" class="img-fluid mx-auto" />`
+  : `<img src="https://cdn.pixabay.com/photo/2018/01/05/00/20/test-image-3061864_960_720.png" alt="image not available" class="img-fluid mx-auto" />`;
 
 
 function displayEpisodes(arr) {
@@ -113,7 +114,7 @@ function displaySelectedShow(arr) {
 }
 
 selectEpisodesEl.addEventListener('change', (e) => {
-  if (e.target.value == 'selectAll') { displayEpisodes(allEpisodes); }
+  if (e.target.value === 'selectAll') { displayEpisodes(allEpisodes); }
   for (let ep of allEpisodes) {
     if (ep.id == selectEpisodesEl.value) {
       episodesEl.innerHTML = getEpisodeCard(ep);
@@ -123,7 +124,7 @@ selectEpisodesEl.addEventListener('change', (e) => {
 })
 
 selectShowEl.addEventListener('change', (e) => {
-  if (e.target.value == 'allShows') {
+  if (e.target.value === 'allShows') {
     displayShows(allTVShows);
     searchEpisodesEl.value = '';
   };
@@ -164,7 +165,6 @@ function displayAllShows(arr) {
   searchShowsEl.setAttribute('style', 'display: inline');
   searchEpisodesEl.setAttribute('style', 'display: none !important');
 }
-
 
 function getAllGenres() {
   let genres = [];
