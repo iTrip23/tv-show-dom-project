@@ -13,19 +13,19 @@
   <body class="bg-dark">
     <header class="container"> 
       <div class="row">
-        <h1 class="project-title text-white col-md-11 text-center m-4">Welcome to my TV-Show Project</h1>
-        <select name="TVShows" class="col-md-5 m-2 mx-auto" id="TVShows"></select>
-        <select name="episodes" id="select" class="col-md-5 m-2 mx-auto"></select>
+        <h1 class="project-title text-white col-11 text-center m-4">Welcome to my TV-Show Project</h1>
+        <select name="TVShows" class="col-10 col-md-5 m-2 mx-auto" id="TVShows"></select>
+        <select name="episodes" id="select" class="col-10 col-md-5 m-2 mx-auto"></select>
         <input type="search" id="searchShows" class="col-8 mx-auto m-2" placeholder="Search...">
         <input type="search" id="searchEpisodes" class="col-8 mx-auto m-2" placeholder="Search..." style="display: none;">
         <p class="search-info text-white text-center mx-auto m-2" id="search-result"></p>
       </div>
       <div class="row text-center">
-        <button type="button" onclick="displayShows(allTVShows)" class="btn btn-primary col-md-3 mx-auto m-2">All Shows</button>
+        <button type="button" onclick="displayShows(allTVShows)" class="btn btn-primary col-8 col-md-3 mx-auto m-2">All Shows</button>
       </div>
     </header>
     <main>
-      <div id="root" class="container-fluid">
+      <div id="root" class="container">
         <div id="episodes" class="row d-flex justify-content-around"></div>
         <div id="tvSeries" class="row d-flex justify-content-around"></div>
       </div>

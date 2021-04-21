@@ -13,7 +13,7 @@ const showsEl = document.querySelector('#tvSeries');
 
 const getEpisodeTitle = episode => 'S' + `${episode.season}`.padStart(2, 0) + 'E' + `${episode.number}`.padStart(2, 0) + ` - ${episode.name}`;
 
-const getEpisodeCard = episode => `<div class="col-md-3 m-1 card">
+const getEpisodeCard = episode => `<div class="col-11 col-md-3 m-1 card">
   <figure class="card-body card-css">
     <h5 class="card-title text-center">${getEpisodeTitle(episode)}</h5>
     <hr>
@@ -22,18 +22,18 @@ const getEpisodeCard = episode => `<div class="col-md-3 m-1 card">
   </figure>
 </div>`;
 
-const getShowCard = tvSeries => `<div class="card col-12 col-md-10 m-3 show-card g-0">
+const getShowCard = tvSeries => `<div class="card col-11 col-md-10 m-3 show-card g-0">
     <div class="row g-0">
-      <figure class="col-md-3">
+      <figure class="col-12 col-md-3">
         ${getImageAndDisplay(tvSeries)}
       </figure>
-      <section class="col-md-6">
+      <section class="col-9 col-md-6">
         <div class="card-body">
           <h4 class="card-title" onclick="fetchShowAndDisplay(${tvSeries.id})" style="cursor: pointer">${tvSeries.name}</h4>
           <p class="summary-p">${tvSeries.summary}</p>
         </div>
       </section>
-      <section class="col-md-3">
+      <section class="col-3 col-md-3">
         <div class="card-body">
           <p class="card-text"><strong>Rating:</strong> ${tvSeries.rating.average}</p>
           <p class="card-text"><strong>Genre:</strong> ${tvSeries.genres}</p>
