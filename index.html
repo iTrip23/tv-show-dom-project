@@ -3,19 +3,35 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TV Show Project | My Name (My GitHub username)</title>
+    <title>TV Show Project | Ionut Tripa (iTrip23)</title>
     <link href="style.css" rel="stylesheet" />
-    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="icon" href="./favicon.ico" type="image/x-icon" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
+      integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <script src="script.js" defer></script>
   </head>
-
-  <body>
-    <div id="root">
-    </div>
-
-    <!-- Loads a provided function called getAllEpisodes() which returns all episodes -->
-    <script src="episodes.js"></script>
-
-    <!-- Loads YOUR javascript code -->
-    <script src="script.js"></script>
+  <body class="bg-dark">
+    <header class="container"> 
+      <div class="row">
+        <h1 class="project-title text-white col-11 text-center m-4">Welcome to my TV-Show Project</h1>
+        <select name="TVShows" class="col-10 col-md-5 m-2 mx-auto" id="TVShows"></select>
+        <select name="episodes" id="select" class="col-10 col-md-5 m-2 mx-auto"></select>
+        <input type="search" id="searchShows" class="col-8 mx-auto m-2" placeholder="Search...">
+        <input type="search" id="searchEpisodes" class="col-8 mx-auto m-2" placeholder="Search..." style="display: none;">
+        <p class="search-info text-white text-center mx-auto m-2" id="search-result"></p>
+      </div>
+      <div class="row text-center">
+        <button type="button" onclick="displayShows(allTVShows)" class="btn btn-primary col-8 col-md-3 mx-auto m-2">All Shows</button>
+      </div>
+    </header>
+    <main>
+      <div id="root" class="container">
+        <div id="episodes" class="row d-flex justify-content-around"></div>
+        <div id="tvSeries" class="row d-flex justify-content-around"></div>
+      </div>
+    </main>
+    <footer>
+      <p class="text-center text-white">All the data presented in this project comes from <a href="https://www.tvmaze.com/" target="_blank">TVMaze.com</a></p>
+    </footer>
   </body>
 </html>
